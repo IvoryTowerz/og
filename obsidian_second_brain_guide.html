@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How I Used the Obsidian Second Brain System — And Turned It Into a CEO-Level Decision Engine</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-surface: #f7f6f3;
+    --bg-code: #161614;
+    --text: #111110;
+    --text-muted: #6b6a67;
+    --text-faint: #9b9a96;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.18);
+    --accent: #1d9e75;
+    --accent-dark: #0f6e56;
+    --accent-light: #e1f5ee;
+    --code-text: #e8e6df;
+    --code-green: #7ec8a4;
+    --code-blue: #79b8e8;
+    --code-yellow: #e3c07d;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141412;
+      --bg-surface: #1e1d1b;
+      --bg-code: #0d0d0b;
+      --text: #f0ede6;
+      --text-muted: #9b9a96;
+      --text-faint: #6b6a67;
+      --border: rgba(255,255,255,0.09);
+      --border-strong: rgba(255,255,255,0.15);
+      --accent: #1d9e75;
+      --accent-dark: #5dcaa5;
+      --accent-light: #04342c;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+  /* Header */
+  .article-header { margin-bottom: 2.5rem; }
+  .article-header .eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+  .article-header h1 { font-size: 32px; font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; margin-bottom: 1rem; }
+  .article-header .deck { font-size: 17px; color: var(--text-muted); line-height: 1.65; margin-bottom: 1.5rem; }
+  .byline { display: flex; align-items: center; gap: 12px; padding: 1rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .byline-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px; color: white; flex-shrink: 0; }
+  .byline-meta { flex: 1; }
+  .byline-name { font-size: 14px; font-weight: 500; }
+  .byline-handle { font-size: 13px; color: var(--text-muted); }
+  .byline-handle a { color: var(--accent-dark); text-decoration: none; }
+  .byline-handle a:hover { text-decoration: underline; }
+
+  /* Typography */
+  h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.015em; margin: 2.5rem 0 0.75rem; display: flex; align-items: center; gap: 10px; }
+  h3 { font-size: 16px; font-weight: 600; margin: 1.5rem 0 0.4rem; }
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+  a { color: var(--accent-dark); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+  /* Badge */
+  .badge {
+    display: inline-block;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  /* Code */
+  code {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, 'Courier New', monospace;
+    font-size: 13px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--text);
+  }
+  pre {
+    background: var(--bg-code);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+    margin: 0.75rem 0 1.25rem;
+    overflow-x: auto;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--code-text);
+  }
+  .code-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 4px;
+    margin-top: 1.25rem;
+  }
+
+  /* Callout */
+  .callout {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 0.875rem 1.1rem;
+    margin: 1.25rem 0;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .callout strong { color: var(--accent-dark); }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; margin: 0.75rem 0 1.5rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: var(--bg-surface); font-weight: 600; text-align: left; padding: 9px 14px; border: 1px solid var(--border-strong); font-size: 13px; }
+  td { padding: 9px 14px; border: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
+  td:first-child { font-family: 'SF Mono', 'Fira Code', Consolas, monospace; font-size: 13px; white-space: nowrap; color: var(--text-muted); }
+
+  /* Steps */
+  .steps { margin: 1rem 0 1.5rem; }
+  .step-row { display: flex; gap: 16px; margin-bottom: 1.5rem; align-items: flex-start; }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--bg-surface); border: 1px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: var(--text-muted);
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .step-body { flex: 1; }
+  .step-body h3 { margin-top: 0; margin-bottom: 0.4rem; }
+
+  /* Graph mode cards */
+  .modes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0.75rem 0 1.5rem; }
+  @media (max-width: 600px) { .modes-grid { grid-template-columns: 1fr; } }
+  .mode-card { background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 1rem; }
+  .mode-card .mode-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .mode-card .mode-filter { font-family: 'SF Mono', Consolas, monospace; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; word-break: break-all; line-height: 1.5; }
+  .mode-card .mode-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Before/after */
+  .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1rem 0 1.5rem; }
+  @media (max-width: 500px) { .before-after { grid-template-columns: 1fr; } }
+  .ba-card { border-radius: var(--radius); padding: 1rem 1.1rem; border: 1px solid var(--border); }
+  .ba-card.before { background: var(--bg-surface); }
+  .ba-card.after { background: var(--bg-surface); border-color: var(--accent); border-left: 3px solid var(--accent); }
+  .ba-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .ba-label.before { color: var(--text-faint); }
+  .ba-label.after { color: var(--accent); }
+  .ba-card ul { padding-left: 1.2rem; font-size: 13px; color: var(--text-muted); }
+  .ba-card ul li { margin-bottom: 4px; }
+
+  /* Prompt blocks */
+  .prompt-block { border: 1px solid var(--border-strong); border-radius: var(--radius); margin: 0.75rem 0 1.5rem; overflow: hidden; }
+  .prompt-label { background: var(--bg-surface); font-size: 12px; font-weight: 600; padding: 7px 14px; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+  .prompt-body { background: var(--bg-code); padding: 1rem 1.25rem; }
+  .prompt-body code { background: none; border: none; color: var(--code-text); font-size: 13px; line-height: 1.7; padding: 0; }
+
+  /* Loop list */
+  .loop-list { list-style: none; padding: 0; margin: 1rem 0 1.5rem; }
+  .loop-list li { display: flex; gap: 14px; margin-bottom: 0.75rem; font-size: 15px; align-items: flex-start; }
+  .loop-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--accent); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 3px;
+  }
+
+  /* Dashboard template */
+  .dashboard-block { background: var(--bg-code); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin: 0.75rem 0 1.25rem; font-family: 'SF Mono', Consolas, monospace; font-size: 13px; line-height: 1.8; color: var(--code-text); }
+  .dashboard-block .d-heading { color: var(--code-yellow); }
+  .dashboard-block .d-link { color: var(--code-blue); }
+  .dashboard-block .d-checkbox { color: var(--text-faint); }
+
+  /* Feedback loop */
+  .feedback-flow { display: flex; align-items: center; gap: 0; margin: 1rem 0 1.5rem; flex-wrap: wrap; }
+  .flow-item { background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 0.6rem 1rem; font-size: 13px; font-weight: 500; white-space: nowrap; }
+  .flow-arrow { color: var(--accent); font-size: 16px; padding: 0 8px; font-weight: 600; }
+
+  /* Footer */
+  .footer { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+  .footer-sources { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.5rem; }
+  .footer-author { display: flex; align-items: center; gap: 12px; padding: 1rem 1.1rem; background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); }
+  .footer-author .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: white; flex-shrink: 0; }
+  .footer-author .fa-meta .fa-name { font-size: 15px; font-weight: 600; }
+  .footer-author .fa-meta .fa-handle { font-size: 13px; color: var(--text-muted); }
+  .footer-author .fa-meta .fa-bio { font-size: 12px; color: var(--text-faint); margin-top: 2px; line-height: 1.5; }
+
+  /* Lists */
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  li { margin-bottom: 0.3rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="article-header">
+    <div class="eyebrow">Obsidian · Second Brain · AI Workflows</div>
+    <h1>How I Used the Obsidian "Second Brain" System — And Turned It Into a CEO-Level Decision Engine</h1>
+    <p class="deck">The Karpathy LLM Wiki pattern going viral is genuinely powerful. But most setups — including the ones being shared — have a core problem nobody explains clearly. You end up with a visualization of your system, not your mind. Here's the complete fix, plus the operator-grade system that turns your vault into a decision engine.</p>
+    <div class="byline">
+      <div class="byline-avatar">AE</div>
+      <div class="byline-meta">
+        <div class="byline-name">Aspie Eye</div>
+        <div class="byline-handle"><a href="https://x.com/Ivory_Towerz" target="_blank">@Ivory_Towerz</a> · Vibe Coder Apprentice</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- THE PROBLEM -->
+  <h2><span class="badge">The Problem</span></h2>
+  <p>When you follow the standard Second Brain setup, Obsidian graphs <em>everything</em> — templates, attachments, AI helper files, system notes. The result is a cloud of infrastructure noise instead of a network of connected thinking.</p>
+
+  <div class="before-after">
+    <div class="ba-card before">
+      <div class="ba-label before">Most setups today</div>
+      <ul>
+        <li>Notes = storage + AI dumping ground</li>
+        <li>Graph = messy cloud of system files</li>
+        <li>You see your infrastructure, not your mind</li>
+      </ul>
+    </div>
+    <div class="ba-card after">
+      <div class="ba-label after">What you actually want</div>
+      <ul>
+        <li>Notes = thinking units</li>
+        <li>Graph = decision network</li>
+        <li>Clusters of ideas, bridges of insight</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout"><strong>The guide makes it sound automatic. It's not.</strong> Your graph becomes useful only when you write real notes, link ideas intentionally, and build relationships over time. It gets sharper every single day you use it — but the work is real.</div>
+
+  <hr>
+
+  <!-- PART 1 -->
+  <h2><span class="badge">Part 1</span> Fix the graph now</h2>
+  <p>Four steps to go from a messy cloud to a clean, high-signal knowledge graph.</p>
+
+  <div class="steps">
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Basic noise filter</h3>
+        <p>Paste this into Graph View → ⚙️ to immediately remove most of the clutter:</p>
+        <pre><code>-path:_Templates -path:_Attachments -path:.obsidian</code></pre>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Elite include-only filter (recommended)</h3>
+        <p>Go further — show only meaningful nodes, nothing else:</p>
+        <pre><code>path:Projects OR path:People OR path:Resources OR path:Areas</code></pre>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Kill the visual clutter</h3>
+        <p>Inside Graph settings:</p>
+        <ul>
+          <li>Turn <strong>off</strong>: Attachments, Orphans (optional)</li>
+          <li>Set Link Distance: 1–2</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Start linking — this is what people skip</h3>
+        <p>Even with filters, your graph looks empty unless notes are actually connected. Three directions, always:</p>
+        <ul>
+          <li><code>[[Big Idea]]</code> — link <strong>up</strong> to concepts and strategy</li>
+          <li><code>[[Project X]]</code> — link <strong>down</strong> to execution</li>
+          <li><code>[[Person Name]]</code> — link <strong>sideways</strong> to people and resources</li>
+        </ul>
+        <p>No links = no graph. This is the network effect the whole system depends on.</p>
+      </div>
+    </div>
+  </div>
+
+  <p>After 30–50 notes with proper linking, you'll start to see what the graph is actually for: tight clusters representing business domains, bridge nodes representing strategic insights, people connected to the projects they affect.</p>
+
+  <hr>
+
+  <!-- PART 2 -->
+  <h2><span class="badge">Part 2</span> Executive folder structure</h2>
+  <p>Keep it intentional and simple. Each folder has exactly one job.</p>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>Folder</th><th>Purpose</th></tr>
+      <tr><td>00_System/</td><td>Dashboards, Index pages, Maps of Content — filter this out of the main graph</td></tr>
+      <tr><td>10_Areas/</td><td>Ongoing responsibilities (Health, Finance, Business Ops, Marketing)</td></tr>
+      <tr><td>20_Projects/</td><td>Finite outcomes with clear goals and end dates</td></tr>
+      <tr><td>30_Knowledge/</td><td>Your intellectual capital — this is where the real graph magic lives</td></tr>
+      <tr><td>40_People/</td><td>Powerful relationship mapping — linked to projects and knowledge</td></tr>
+      <tr><td>50_Journal/</td><td>Daily capture — optional, keep out of main graph</td></tr>
+      <tr><td>90_Archive/</td><td>Completed items — filter out to reduce noise</td></tr>
+      <tr><td>_Templates/ + _Assets/</td><td>Garbage layer — never in graph, ever</td></tr>
+    </table>
+  </div>
+
+  <div class="code-label">Master graph filter — paste this now</div>
+  <pre><code>-path:_Templates -path:_Assets -path:00_System -path:50_Journal -path:90_Archive</code></pre>
+
+  <div class="code-label">Combined with elite include-only layer</div>
+  <pre><code>(path:20_Projects OR path:30_Knowledge OR path:40_People OR path:10_Areas)</code></pre>
+
+  <p>Together, these give you only meaningful nodes, no system noise, and clear clusters.</p>
+
+  <hr>
+
+  <!-- PART 3 -->
+  <h2><span class="badge">Part 3</span> Build notes that actually think</h2>
+  <p>Folder structure means nothing if your notes are dead storage. The real upgrade is making every note in <code>30_Knowledge/</code> a connected thinking unit.</p>
+
+  <div class="code-label">Pro note structure — use this template in 30_Knowledge/</div>
+  <pre><code># AI Strategy
+
+## Related
+- [[Sales Systems]]
+- [[Client Acquisition]]
+- [[Automation]]
+
+## Used In
+- [[Project X]]
+- [[Launch Consulting Offer]]
+
+## People
+- [[John Smith]]
+
+## Notes
+Your actual thinking here.</code></pre>
+
+  <p>This forces connections, creates clustering, and builds graph intelligence over time. The linking strategy is everything:</p>
+  <ul>
+    <li>Link <strong>UP</strong> to big ideas → <code>[[AI Strategy]]</code> <code>[[Growth Loops]]</code></li>
+    <li>Link <strong>DOWN</strong> to execution → <code>[[Project X]]</code></li>
+    <li>Link <strong>SIDEWAYS</strong> to people and resources → <code>[[Client ABC]]</code> <code>[[Book: $100M Offers]]</code></li>
+  </ul>
+
+  <hr>
+
+  <!-- PART 4 -->
+  <h2><span class="badge">Part 4</span> Three saved graph modes</h2>
+  <p>Create these once. Switch based on what you're doing. Three completely different views of the same vault.</p>
+
+  <div class="modes-grid">
+    <div class="mode-card">
+      <div class="mode-title">Thinking Graph</div>
+      <div class="mode-filter">path:30_Knowledge</div>
+      <div class="mode-desc">Pure intellectual capital. No execution noise whatsoever.</div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-title">Execution Graph</div>
+      <div class="mode-filter">path:20_Projects OR path:10_Areas</div>
+      <div class="mode-desc">Operational status. What's in motion right now.</div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-title">Relationship Graph</div>
+      <div class="mode-filter">path:40_People</div>
+      <div class="mode-desc">Your full relationship network and who's connected to what.</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- PART 5 -->
+  <h2><span class="badge">Part 5</span> CEO Dashboard — your control center</h2>
+  <p>Create a note at <code>00_System/CEO Dashboard</code>. This is not a note — it's your daily operating system. Open it first every morning. Update it. Link everything important here. If it's not linked here, it doesn't matter.</p>
+
+  <div class="dashboard-block">
+    <span class="d-heading"># CEO Dashboard</span><br><br>
+    <span class="d-heading">## 🚨 Top Priorities (This Week)</span><br>
+    - [ ] <span class="d-checkbox">Priority 1</span><br>
+    - [ ] <span class="d-checkbox">Priority 2</span><br>
+    - [ ] <span class="d-checkbox">Priority 3</span><br><br>
+    <span class="d-heading">## 📊 Key Projects (Active)</span><br>
+    - <span class="d-link">[[Project 1]]</span> &nbsp;- <span class="d-link">[[Project 2]]</span> &nbsp;- <span class="d-link">[[Project 3]]</span><br><br>
+    <span class="d-heading">## 🎯 Strategic Focus Areas</span><br>
+    - <span class="d-link">[[Sales Systems]]</span> &nbsp;- <span class="d-link">[[AI Strategy]]</span> &nbsp;- <span class="d-link">[[Growth]]</span> &nbsp;- <span class="d-link">[[Capital Allocation]]</span><br><br>
+    <span class="d-heading">## 👥 Key People / Relationships</span><br>
+    - <span class="d-link">[[Client A]]</span> &nbsp;- <span class="d-link">[[Partner B]]</span> &nbsp;- <span class="d-link">[[Team Member C]]</span><br><br>
+    <span class="d-heading">## 💰 Revenue Drivers</span><br>
+    - <span class="d-link">[[Offer 1]]</span> &nbsp;- <span class="d-link">[[Offer 2]]</span> &nbsp;- <span class="d-link">[[Acquisition Channel]]</span><br><br>
+    <span class="d-heading">## ⚡ Decision Queue</span><br>
+    - [ ] <span class="d-link">[[Decision: Expand Service Line]]</span><br>
+    - [ ] <span class="d-link">[[Decision: Hire / Fire / Delegate]]</span><br>
+    - [ ] <span class="d-link">[[Decision: Investment Allocation]]</span><br><br>
+    <span class="d-heading">## 📈 Metrics Snapshot</span><br>
+    Revenue: &nbsp;&nbsp;&nbsp;&nbsp;Pipeline: &nbsp;&nbsp;&nbsp;&nbsp;Conversion Rate: &nbsp;&nbsp;&nbsp;&nbsp;Cash Position:<br><br>
+    <span class="d-heading">## 🧠 Current Thinking</span><br>
+    —<br><br>
+    <span class="d-heading">## 🔁 Weekly Review</span><br>
+    Wins: &nbsp;&nbsp;&nbsp;&nbsp;Losses: &nbsp;&nbsp;&nbsp;&nbsp;Lessons: &nbsp;&nbsp;&nbsp;&nbsp;Adjustments:<br><br>
+    <span class="d-heading">## 🗂 Quick Links</span><br>
+    - <span class="d-link">[[Master Knowledge Index]]</span> &nbsp;- <span class="d-link">[[Projects Dashboard]]</span> &nbsp;- <span class="d-link">[[People Index]]</span>
+  </div>
+
+  <div class="callout"><strong>How to use it:</strong> Update Top Priorities every morning. Pull in decisions you're avoiding into the Decision Queue. Link every new project and person the moment they matter. This note is your cockpit — it should reflect exactly where your attention is.</div>
+
+  <hr>
+
+  <!-- PART 6 -->
+  <h2><span class="badge">Part 6</span> Turn your vault into a decision engine</h2>
+  <p>This is the step most people never reach. Right now your vault is probably a storage and AI dumping ground. Here's how you convert it into a decision engine and leverage system.</p>
+
+  <h3>Step A — Introduce Decision Notes (game changer)</h3>
+  <p>Create a folder: <code>00_System/Decisions/</code> and use this template for every real decision you face:</p>
+
+  <div class="code-label">Decision note template</div>
+  <pre><code># Decision: {{Title}}
+
+## Context
+What's happening? Why does this matter?
+
+## Options
+- Option 1:
+- Option 2:
+- Option 3:
+
+## Tradeoffs
+—
+
+## Linked Knowledge
+- [[AI Strategy]]
+- [[Revenue Model]]
+- [[Market Insight]]
+
+## Impact Areas
+- [[Project X]]
+- [[Area: Sales]]
+
+## Decision
+✅ Chosen option:
+
+## Outcome (fill in later)
+- Result:
+- What worked:
+- What didn't:</code></pre>
+
+  <p>Your system now does something powerful: it connects <strong>thinking → action → outcome</strong>. That feedback loop is the whole game.</p>
+
+  <h3>Step B — Create a Master Knowledge Index (your brain hub)</h3>
+  <p>Create: <code>00_System/Master Knowledge Index</code></p>
+
+  <div class="code-label">Master Knowledge Index template</div>
+  <pre><code># 🧠 Master Knowledge Index
+
+## Strategy
+- [[AI Strategy]]
+- [[Business Model]]
+- [[Growth Strategy]]
+
+## Sales
+- [[Sales Systems]]
+- [[Funnels]]
+- [[Objection Handling]]
+
+## Execution
+- [[Hiring]]
+- [[Operations]]
+- [[Automation]]
+
+## Leverage
+- [[Systems Thinking]]
+- [[Delegation]]
+- [[Capital Allocation]]</code></pre>
+
+  <p>This becomes your <em>thinking map</em> — an index of everything you know that's connected to everything you're doing.</p>
+
+  <h3>Step C — Force every project to link to knowledge</h3>
+  <p>Open each project note in <code>20_Projects/</code> and add a section:</p>
+
+  <pre><code>## Driven By
+- [[AI Strategy]]
+- [[Sales Systems]]
+
+## Key Decisions
+- [[Decision: Launch Strategy]]</code></pre>
+
+  <p>Now projects aren't isolated notes — they're tied to the strategy that drives them and the decisions that shaped them.</p>
+
+  <h3>Step D — Build feedback loops</h3>
+  <p>This is what makes the system elite. Every time something happens in the real world:</p>
+
+  <div class="feedback-flow">
+    <div class="flow-item">Experience</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item">Update Project (outcome)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item">Refine Knowledge note</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item">Update Decision note (result)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item">Better decisions next time</div>
+  </div>
+
+  <p>Example: you try a sales tactic. It works. You update the Project (outcome logged), refine the Knowledge note with the new insight, and update the Decision note with what actually happened. Now your vault is a system that learns from your experience — automatically, because you built the structure to capture it.</p>
+
+  <div class="callout"><strong>The real shift:</strong> Experience gets converted into refined insight, which drives better decisions, which drives better outcomes. This is the compounding effect everyone talks about but few actually build.</div>
+
+  <hr>
+
+  <!-- PART 7 -->
+  <h2><span class="badge">Part 7</span> AI as chief of staff</h2>
+  <p>Turn Claude or ChatGPT into a systems operator for your vault. These are the battle-tested prompts — not "help me write notes," but "operate my knowledge system."</p>
+
+  <div class="prompt-block">
+    <div class="prompt-label">Prompt 1 — Master prompt (set once, use always)</div>
+    <div class="prompt-body"><code>You are my Chief of Staff and knowledge architect.
+I use Obsidian as a second brain with this structure:
+00_System/ | 10_Areas/ | 20_Projects/ | 30_Knowledge/ | 40_People/ | 50_Journal/ | 90_Archive/
+
+Your job is to:
+- Turn raw ideas into structured notes
+- Ensure every note links to related knowledge, projects, and people
+- Help me make better decisions (not just store information)
+- Identify gaps, inefficiencies, and opportunities in my thinking
+- Suggest connections between ideas automatically
+
+When creating notes:
+- Always include internal links [[like this]]
+- Always connect to strategy (knowledge), execution (projects), and people when relevant
+- Keep notes concise, actionable, and decision-oriented
+
+When I give you input — decide whether it should be:
+1. A Knowledge note
+2. A Project update
+3. A Decision note
+4. A Person note
+
+Then create or update it properly.
+
+Optimize for: → clarity → leverage → decision quality → speed of execution</code></div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-label">Prompt 2 — Turn any idea into a proper note</div>
+    <div class="prompt-body"><code>Convert the following into a properly structured Obsidian note using my system.
+- Place it in the correct folder
+- Add internal links
+- Connect it to strategy, projects, and people
+- Make it useful for decisions, not just storage
+
+Input:
+[PASTE IDEA HERE]</code></div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-label">Prompt 3 — Decision notes</div>
+    <div class="prompt-body"><code>Turn this situation into a Decision note.
+Include:
+- context
+- options
+- tradeoffs
+- linked knowledge
+- impacted projects and people
+- a recommended decision
+
+Make it sharp and executive-level.
+
+Situation:
+[PASTE PROBLEM HERE]</code></div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-label">Prompt 4 — Force connections (fixes your graph)</div>
+    <div class="prompt-body"><code>Analyze this note and suggest:
+1. Related knowledge notes
+2. Related projects
+3. Relevant people
+4. Missing links that would improve decision-making
+
+Then rewrite the note with those connections added using Obsidian [[links]].
+
+Note:
+[PASTE NOTE]</code></div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-label">Prompt 5 — Weekly CEO review</div>
+    <div class="prompt-body"><code>Act as my CEO advisor.
+Based on the following projects, decisions, and current priorities:
+
+Identify:
+1. What matters most right now
+2. What I should stop doing
+3. Where I'm making poor tradeoffs
+4. The highest leverage move for next week
+
+Then update my CEO Dashboard.
+
+Data:
+[PASTE DASHBOARD OR NOTES]</code></div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-label">Prompt 6 — Organize your vault automatically (use with Claude Code / Desktop)</div>
+    <div class="prompt-body"><code>Scan my Obsidian vault and:
+1. Move notes into the correct folders:
+   - Knowledge → 30_Knowledge
+   - Projects → 20_Projects
+   - People → 40_People
+2. Add internal links between related notes
+3. Identify orphan notes and connect them
+4. Suggest missing Decision notes where decisions are implied but not captured
+5. Create or update my:
+   - CEO Dashboard
+   - Master Knowledge Index
+
+Do not duplicate notes — improve structure instead.</code></div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-label">Prompt 7 — Turn your vault into a strategy engine</div>
+    <div class="prompt-body"><code>Analyze my notes as a system.
+Identify:
+- patterns in my thinking
+- repeated problems or bottlenecks
+- underutilized knowledge
+- opportunities for leverage
+
+Then:
+- recommend 3 strategic shifts
+- suggest new knowledge notes I should create
+- suggest decisions I should be making right now
+
+Focus on increasing: revenue, clarity, execution speed.</code></div>
+  </div>
+
+  <div class="callout"><strong>Pro tip:</strong> When using Claude Desktop with your vault connected, you're not asking it to "help you write notes." You're asking it to operate your knowledge system like a Chief of Staff. That framing changes everything about how you use it.</div>
+
+  <hr>
+
+  <!-- DAILY LOOP -->
+  <h2><span class="badge">The Daily Loop</span></h2>
+  <p>Simple. Five steps. Run this every day and the system compounds.</p>
+
+  <ol class="loop-list">
+    <li><div class="loop-num">1</div><span>Open CEO Dashboard — work from Top Priorities only</span></li>
+    <li><div class="loop-num">2</div><span>Dump new ideas → use Prompt 2 to structure them properly</span></li>
+    <li><div class="loop-num">3</div><span>When stuck on a decision → create a Decision note via Prompt 3</span></li>
+    <li><div class="loop-num">4</div><span>Link everything you touch — up, down, and sideways</span></li>
+    <li><div class="loop-num">5</div><span>End of day → update outcomes on active projects</span></li>
+  </ol>
+
+  <p>Weekly: run Prompt 5 (CEO Review). Occasionally: run Prompt 6 (organize vault) and Prompt 7 (strategy analysis).</p>
+
+  <hr>
+
+  <!-- WHAT YOUR GRAPH TURNS INTO -->
+  <h2><span class="badge">What you get</span></h2>
+
+  <div class="before-after">
+    <div class="ba-card before">
+      <div class="ba-label before">Before</div>
+      <ul>
+        <li>Notes = storage</li>
+        <li>Graph = messy visualization</li>
+        <li>AI = glorified text editor</li>
+        <li>System visible, mind invisible</li>
+      </ul>
+    </div>
+    <div class="ba-card after">
+      <div class="ba-label after">After</div>
+      <ul>
+        <li>Notes = thinking units</li>
+        <li>Graph = decision network</li>
+        <li>AI = Chief of Staff</li>
+        <li>Experience converts to insight automatically</li>
+      </ul>
+    </div>
+  </div>
+
+  <p>After ~30–50 notes with proper structure and linking, your graph shows tight clusters representing your business domains, bridge nodes representing strategic insights, people connected to the projects they affect, and decisions tied to the knowledge that drove them. <strong>It becomes a decision engine.</strong></p>
+
+  <div class="callout">The system sharpens every single day you use it. The investment is front-loaded. The compounding is real. Start with the graph filter today — that's the five-minute fix. Build the rest over the next two weeks.</div>
+
+  <!-- FINAL THOUGHT -->
+  <h2><span class="badge">Final Thought</span></h2>
+  <p>Most people stop at "Second Brain."</p>
+  <p>That's not the goal.</p>
+  <p>The goal is a system that <strong>thinks with you</strong>, sharpens over time, and improves your decisions.</p>
+  <div class="callout" style="font-size: 16px; font-weight: 500; text-align: center;">You don't need more notes.<br>You need a better system.</div>
+
+  <hr>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p class="footer-sources">
+      Thanks to <a href="https://x.com/karpathy" target="_blank">Andrej Karpathy</a> for sharing the LLM Wiki pattern that inspired this — and to <a href="https://x.com/undefinedKi" target="_blank">Yarchi (@undefinedKi)</a> for surfacing it to a wider audience. This guide builds on their work with practical fixes, executive-grade structure, and the operator-level upgrades most setups are missing.
+    </p>
+    <div class="footer-author">
+      <div class="avatar">AE</div>
+      <div class="fa-meta">
+        <div class="fa-name">Aspie Eye</div>
+        <div class="fa-handle"><a href="https://x.com/Ivory_Towerz" target="_blank">@Ivory_Towerz on X</a></div>
+        <div class="fa-bio">Vibe Coder Apprentice</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
